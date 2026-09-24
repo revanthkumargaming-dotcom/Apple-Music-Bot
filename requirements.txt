@@ -5,3 +5,4 @@ httpx
 motor
 beautifulsoup4
 lxml
+Flask
