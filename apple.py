@@ -3,6 +3,8 @@ import os
 import re
 import tempfile
 import urllib.parse
+from flask import Flask
+from threading import Thread
 
 import httpx
 from pyrogram import Client, filters
@@ -23,6 +25,18 @@ from ap import (
     init_session, get_token, get_all_track_forms, get_links_for_track,
     HEADERS, TIMEOUT,
 )
+
+# ── Flask Server for Render ──────────────────────────────────────────────────
+
+web = Flask(__name__)
+
+@web.route("/")
+def home():
+    return "Apple Music Bot is running!"
+
+def run_web():
+    port = int(os.environ.get("PORT", 3000))
+    web.run(host="0.0.0.0", port=port)
 
 # ── Bot Client ────────────────────────────────────────────────────────────────
 
@@ -489,6 +503,7 @@ async def handle_link(client: Client, message):
 
 if __name__ == "__main__":
     import time
+    Thread(target=run_web, daemon=True).start()
     while True:
         try:
             print("Bot starting…")
